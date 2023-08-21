@@ -3,7 +3,7 @@
 **/logs/**
 **/wandb/**
 **/misc/**
-
+nohup
 log
 wandb
 # Byte-compiled / optimized / DLL files

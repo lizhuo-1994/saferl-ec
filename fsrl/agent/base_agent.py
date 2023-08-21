@@ -44,6 +44,8 @@ class BaseAgent(ABC):
         self.task = None
         self.logger = BaseLogger()
         self.cost_limit = 0
+        self.algo = ""
+        self.task = ""
 
     @abstractmethod
     def learn(self, *args, **kwargs) -> None:
@@ -154,6 +156,7 @@ class OffpolicyAgent(BaseAgent):
             defaults to True
         """
         assert self.policy is not None, "The policy is not initialized"
+        self.policy = self.policy.to("cuda:0")
         # set policy to train mode
         self.policy.train()
         # collector
@@ -208,17 +211,18 @@ class OffpolicyAgent(BaseAgent):
             self.logger.store(tab="train", cost_limit=self.cost_limit)
             if verbose:
                 print(f"Epoch: {epoch}", info)
-            return_list.append(info['best_reward'])
-            cost_list.append(info['best_cost'])
+            return_list.append(_epoch_stat['test/reward'])
+            cost_list.append(_epoch_stat['test/cost'])
 
         
         import json, os, datetime
         now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
-        os.makedirs('result/cpo', exist_ok=True)
+        save_path = 'result/{0}/{1}'.format(self.task, self.algo)
+        os.makedirs(save_path, exist_ok=True)
         
-        with open('result/cpo/' + now + '_returns.json', 'w') as f:
+        with open(save_path + '/' + now + '_returns.json', 'w') as f:
             json.dump(return_list, f)
-        with open('result/cpo/' + now + '_costs.json', 'w') as f:
+        with open(save_path + '/' + now + '_costs.json', 'w') as f:
             json.dump(cost_list, f)
 
         return epoch, _epoch_stat, info
@@ -285,6 +289,7 @@ class OnpolicyAgent(BaseAgent):
             defaults to True
         """
         assert self.policy is not None, "The policy is not initialized"
+        self.policy = self.policy.to("cuda:0")
         # set policy to train mode
         self.policy.train()
         # collector
@@ -338,17 +343,18 @@ class OnpolicyAgent(BaseAgent):
             self.logger.store(tab="train", cost_limit=self.cost_limit)
             if verbose:
                 print(f"Epoch: {epoch}", info)
-            return_list.append(info['best_reward'])
-            cost_list.append(info['best_cost'])
+            return_list.append(_epoch_stat['test/reward'])
+            cost_list.append(_epoch_stat['test/cost'])
 
         
         import json, os, datetime
         now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
-        os.makedirs('result/cpo', exist_ok=True)
+        save_path = 'result/{0}/{1}'.format(self.task, self.algo)
+        os.makedirs(save_path, exist_ok=True)
         
-        with open('result/cpo/' + now + '_returns.json', 'w') as f:
+        with open(save_path + '/' + now + '_returns.json', 'w') as f:
             json.dump(return_list, f)
-        with open('result/cpo/' + now + '_costs.json', 'w') as f:
+        with open(save_path + '/' + now + '_costs.json', 'w') as f:
             json.dump(cost_list, f)
 
         return epoch, _epoch_stat, info

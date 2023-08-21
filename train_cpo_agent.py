@@ -119,6 +119,9 @@ def train(args: TrainCfg):
         action_bound_method=args.action_bound_method,
     )
 
+    agent.algo = "cpo"
+    agent.task = args.task
+
     training_num = min(args.training_num, args.episode_per_collect)
     worker = eval(args.worker)
     train_envs = worker([lambda: gym.make(args.task) for _ in range(training_num)])

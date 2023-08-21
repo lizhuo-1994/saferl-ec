@@ -7,7 +7,7 @@ class TrainCfg:
     # general task params
     task: str = "SafetyCarCircle-v0"
     cost_limit: float = 10
-    device: str = "cpu"
+    device: str = "cuda:0"
     thread: int = 4  # if use "cpu" to train
     seed: int = 10
     use_default_cfg: bool = False

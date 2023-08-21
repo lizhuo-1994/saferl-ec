@@ -83,7 +83,7 @@ class CVPOAgent(OffpolicyAgent):
         logger: BaseLogger = BaseLogger(),
         # general task params
         cost_limit: float = 10,
-        device: str = "cpu",
+        device: str = "cuda:0",
         thread: int = 4,  # if use "cpu" to train
         seed: int = 10,
         # CVPO arguments,
@@ -119,7 +119,7 @@ class CVPOAgent(OffpolicyAgent):
         self.cost_limit = cost_limit
 
         # set seed and computing
-        seed_all(seed)
+        # seed_all(seed)
         torch.set_num_threads(thread)
 
         # model

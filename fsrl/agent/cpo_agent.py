@@ -71,7 +71,7 @@ class CPOAgent(OnpolicyAgent):
         env: gym.Env,
         logger: BaseLogger = BaseLogger(),
         cost_limit: float = 10,
-        device: str = "cpu",
+        device: str = "cuda:0",
         thread: int = 4,  # if use "cpu" to train
         seed: int = 10,
         lr: float = 1e-3,
@@ -102,13 +102,14 @@ class CPOAgent(OnpolicyAgent):
         self.cost_limit = cost_limit
 
         # set seed and computing
-        seed_all(seed)
+        # seed_all(seed)
         torch.set_num_threads(thread)
 
         # model
         state_shape = env.observation_space.shape or env.observation_space.n
         action_shape = env.action_space.shape or env.action_space.n
         max_action = env.action_space.high[0]
+
 
         net = Net(state_shape, hidden_sizes=hidden_sizes, device=device)
         actor = ActorProb(
