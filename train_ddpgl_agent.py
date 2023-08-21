@@ -115,6 +115,15 @@ def train(args: TrainCfg):
         lr_scheduler=None
     )
 
+
+    ########################### added for episodic control ##############################
+    agent.algo = args.prefix
+    agent.task = args.task
+    agent.episodic = args.episodic
+    agent.episodic_step = args.episodic_step
+    agent.grid_num = args.grid_num
+    agent.epsilon = args.epsilon
+
     training_num = min(args.training_num, args.episode_per_collect)
     worker = eval(args.worker)
     train_envs = worker([lambda: gym.make(args.task) for _ in range(training_num)])
@@ -137,23 +146,6 @@ def train(args: TrainCfg):
         save_ckpt=args.save_ckpt,  # set this to True to save the policy model,
         verbose=args.verbose,
     )
-
-    if __name__ == "__main__":
-        # Let's watch its performance!
-        from fsrl.data import FastCollector
-        env = gym.make(args.task)
-        agent.policy.eval()
-        collector = FastCollector(agent.policy, env)
-        result = collector.collect(n_episode=10, render=args.render)
-        rews, lens, cost = result["rew"], result["len"], result["cost"]
-        print(f"Final eval reward: {rews.mean()}, cost: {cost}, length: {lens.mean()}")
-
-        agent.policy.train()
-        collector = FastCollector(agent.policy, env)
-        result = collector.collect(n_episode=10, render=args.render)
-        rews, lens, cost = result["rew"], result["len"], result["cost"]
-        print(f"Final train reward: {rews.mean()}, cost: {cost}, length: {lens.mean()}")
-
 
 if __name__ == "__main__":
     train()
