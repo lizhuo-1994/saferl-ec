@@ -142,22 +142,5 @@ def train(args: TrainCfg):
         verbose=args.verbose,
     )
 
-    if __name__ == "__main__":
-        # Let's watch its performance!
-        from fsrl.data import FastCollector
-        env = gym.make(args.task)
-        agent.policy.eval()
-        collector = FastCollector(agent.policy, env)
-        result = collector.collect(n_episode=10, render=args.render)
-        rews, lens, cost = result["rew"], result["len"], result["cost"]
-        print(f"Final eval reward: {rews.mean()}, cost: {cost}, length: {lens.mean()}")
-
-        agent.policy.train()
-        collector = FastCollector(agent.policy, env)
-        result = collector.collect(n_episode=10, render=args.render)
-        rews, lens, cost = result["rew"], result["len"], result["cost"]
-        print(f"Final train reward: {rews.mean()}, cost: {cost}, length: {lens.mean()}")
-
-
 if __name__ == "__main__":
     train()

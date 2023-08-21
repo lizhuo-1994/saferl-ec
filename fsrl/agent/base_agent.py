@@ -201,10 +201,25 @@ class OffpolicyAgent(BaseAgent):
             show_progress=show_progress
         )
 
+        return_list = []
+        cost_list   = []
+
         for epoch, _epoch_stat, info in trainer:
             self.logger.store(tab="train", cost_limit=self.cost_limit)
             if verbose:
                 print(f"Epoch: {epoch}", info)
+            return_list.append(info['best_reward'])
+            cost_list.append(info['best_cost'])
+
+        
+        import json, os, datetime
+        now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
+        os.makedirs('result/cpo', exist_ok=True)
+        
+        with open('result/cpo/' + now + '_returns.json', 'w') as f:
+            json.dump(return_list, f)
+        with open('result/cpo/' + now + '_costs.json', 'w') as f:
+            json.dump(cost_list, f)
 
         return epoch, _epoch_stat, info
 
@@ -316,9 +331,24 @@ class OnpolicyAgent(BaseAgent):
             show_progress=show_progress
         )
 
+        return_list = []
+        cost_list   = []
+
         for epoch, _epoch_stat, info in trainer:
             self.logger.store(tab="train", cost_limit=self.cost_limit)
             if verbose:
                 print(f"Epoch: {epoch}", info)
+            return_list.append(info['best_reward'])
+            cost_list.append(info['best_cost'])
+
+        
+        import json, os, datetime
+        now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
+        os.makedirs('result/cpo', exist_ok=True)
+        
+        with open('result/cpo/' + now + '_returns.json', 'w') as f:
+            json.dump(return_list, f)
+        with open('result/cpo/' + now + '_costs.json', 'w') as f:
+            json.dump(cost_list, f)
 
         return epoch, _epoch_stat, info

@@ -302,8 +302,6 @@ class FastCollector(object):
             else:
                 raise ValueError()
 
-            print(obs_next)
-
             self.data.update(
                 obs_next=obs_next,
                 rew=rew,
@@ -399,7 +397,6 @@ class FastCollector(object):
             rew_mean = len_mean = 0
 
         done_count = termination_count + truncation_count
-
         return {
             "n/ep": episode_count,
             "n/st": step_count,

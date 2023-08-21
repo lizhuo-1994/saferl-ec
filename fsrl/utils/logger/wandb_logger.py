@@ -1,8 +1,10 @@
 import uuid
 from typing import Iterable
 
-import wandb
+import wandb, os
 
+wandb.disabled = True
+os.environ["WANDB_DISABLED"] = "true"
 from fsrl.utils.logger.base_logger import BaseLogger
 
 

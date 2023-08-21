@@ -9,7 +9,7 @@ from tianshou.data import Batch, ReplayBuffer, to_numpy
 from fsrl.data.traj_buf import TrajectoryBuffer
 from fsrl.policy import BasePolicy
 
-
+ 
 class BasicCollector:
     """A basic collector for a single environment.
 
