@@ -95,7 +95,7 @@ class MLP(nn.Module):
         ):
             model += miniblock(in_dim, out_dim, norm, activ, linear_layer)
         self.backbone = nn.Sequential(*model)
-        self.feature_net = nn.Sequential(self.backbone, nn.sigmoid())
+        self.feature_net = nn.Sequential(self.backbone, nn.Sigmoid())
         if output_dim > 0:
             self.model = nn.Sequential(
                 self.backbone,

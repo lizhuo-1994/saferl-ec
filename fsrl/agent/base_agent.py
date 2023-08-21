@@ -5,7 +5,7 @@ import gymnasium as gym
 from tianshou.data import ReplayBuffer, VectorReplayBuffer
 from tianshou.env import BaseVectorEnv, DummyVectorEnv, ShmemVectorEnv, SubprocVectorEnv
 
-from fsrl.data import FastCollector
+from fsrl.data import FastCollector, EpisodicCollector
 from fsrl.policy import BasePolicy
 from fsrl.trainer import OffpolicyTrainer, OnpolicyTrainer
 from fsrl.utils import BaseLogger
@@ -46,7 +46,7 @@ class BaseAgent(ABC):
         self.cost_limit = 0
         self.algo = ""
         self.task = ""
-        self.mode = "causal"
+        self.episodic = False
         self.episodic_step = 1
         self.grid_num = 5
         self.epsilon = 0.1
@@ -169,7 +169,7 @@ class OffpolicyAgent(BaseAgent):
         else:
             buffer = VectorReplayBuffer(buffer_size, len(train_envs))
         
-        if self.mode == "episodic":
+        if self.episodic:
             train_collector = EpisodicCollector(
                 self.policy,
                 train_envs,
@@ -313,12 +313,24 @@ class OnpolicyAgent(BaseAgent):
             buffer = ReplayBuffer(buffer_size)
         else:
             buffer = VectorReplayBuffer(buffer_size, len(train_envs))
-        train_collector = FastCollector(
-            self.policy,
-            train_envs,
-            buffer,
-            exploration_noise=True,
-        )
+
+        if self.episodic:
+            train_collector = EpisodicCollector(
+                self.policy,
+                train_envs,
+                buffer,
+                exploration_noise=True,
+                episodic_step = self.episodic_step,
+                grid_num = self.grid_num,
+                epsilon = self.epsilon
+            )
+        else:
+            train_collector = FastCollector(
+                self.policy,
+                train_envs,
+                buffer,
+                exploration_noise=True,
+            )
         test_collector = FastCollector(
             self.policy, test_envs
         ) if test_envs is not None else None

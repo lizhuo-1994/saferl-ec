@@ -224,7 +224,7 @@ class CVPO(BasePolicy):
     ) -> Batch:
         model = getattr(self, model)
         obs = batch[input]
-        logits, hidden = model(obs, state=state)
+        logits, hidden, feature = model(obs, state=state)
         if isinstance(logits, tuple):
             dist = self.dist_fn(*logits)
         else:
@@ -236,7 +236,7 @@ class CVPO(BasePolicy):
                 act = logits[0]
         else:
             act = dist.sample()
-        return Batch(logits=logits, act=act, state=hidden, dist=dist)
+        return Batch(logits=logits, act=act, state=hidden, dist=dist, feature=feature)
 
     def critics_loss(
         self, batch: Batch, critics: torch.nn.Module, optimizer: torch.optim.Optimizer

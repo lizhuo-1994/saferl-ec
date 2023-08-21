@@ -55,6 +55,7 @@ class ScoreInspector:
         self.states_info = dict()
         
         #self.pcaModel = joblib.load(config.PCA_MODEL_PATH)
+        print(self.min_state, self.max_state, self.grid_num)
         self.grid = Grid(self.min_state, self.max_state, self.grid_num)   
 
     def save(self, env_name):

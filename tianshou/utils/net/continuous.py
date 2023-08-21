@@ -214,7 +214,7 @@ class ActorProb(nn.Module):
         if not self._unbounded:
             mu = self._max * torch.tanh(mu)
         if self._c_sigma:
-            sigma = torch.clamp(self.sigma(logits), min=SIGMA_MIN, max=SIGMA_MAX).exp()
+            sigma = torch.clamp(self.sigma(logits)[0], min=SIGMA_MIN, max=SIGMA_MAX).exp()
         else:
             shape = [1] * len(mu.shape)
             shape[1] = -1

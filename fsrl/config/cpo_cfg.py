@@ -58,6 +58,12 @@ class TrainCfg:
     prefix: Optional[str] = "cpo"
     suffix: Optional[str] = ""
 
+    ############ added for episodic control
+    episodic: bool = False
+    episodic_step: int = 1
+    grid_num: int = 5
+    epsilon: float = 0.1
+
 
 # bullet-safety-gym task default configs
 

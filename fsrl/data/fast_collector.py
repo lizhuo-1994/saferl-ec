@@ -335,7 +335,6 @@ class FastCollector(object):
             ptr, ep_rew, ep_len, ep_idx = self.buffer.add(
                 self.data, buffer_ids=ready_env_ids
             )
-
             # collect statistics
             step_count += len(ready_env_ids)
 

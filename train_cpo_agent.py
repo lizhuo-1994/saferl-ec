@@ -63,7 +63,6 @@ TASK_TO_CFG = {
 
 @pyrallis.wrap()
 def train(args: TrainCfg):
-
     task = args.task
     default_cfg = TASK_TO_CFG[task]() if task in TASK_TO_CFG else TrainCfg()
     # use the default configs instead of the input args.
@@ -119,8 +118,14 @@ def train(args: TrainCfg):
         action_bound_method=args.action_bound_method,
     )
 
-    agent.algo = "cpo"
+
+    ########################### added for episodic control ##############################
+    agent.algo = args.prefix
     agent.task = args.task
+    agent.episodic = args.episodic
+    agent.episodic_step = args.episodic_step
+    agent.grid_num = args.grid_num
+    agent.epsilon = args.epsilon
 
     training_num = min(args.training_num, args.episode_per_collect)
     worker = eval(args.worker)

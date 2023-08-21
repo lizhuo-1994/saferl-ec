@@ -66,6 +66,7 @@ class EpisodicCollector(object):
 
         ########## result ###########
         self.ep_reward_recorder = []
+        self.per_buffer_size = int(self.buffer.maxsize / self.buffer.buffer_num)
 
     def _assign_buffer(self, buffer: Optional[ReplayBuffer]) -> None:
         """Check if the buffer matches the constraint."""
@@ -308,26 +309,6 @@ class EpisodicCollector(object):
                 terminated = np.logical_and(done, ~truncated)
             else:
                 raise ValueError()
-            
-            ##################### added for episodic control ############################################
-            observation = self.data.obs[0]
-            action = action_remap[0]
-            reward = rew[0]
-            done_env = done[0]
-            self.abstracter.append(list(feature) + list(action), reward, done_env)
-            if self.abstracter.inspector.mode == 'state':
-                self.state_action_list.append(list(observation))
-            elif self.abstracter.inspector.mode == 'state_action':
-                self.state_action_list.append(list(observation) + list(action))
-            self.reward_list.append(reward)
-        
-
-            if done:
-                self.reward_list = self.abstracter.reward_shaping(np.array(self.state_action_list), np.array(self.reward_list))
-                self.ep_reward = copy.deepcopy(self.reward_list)
-                self.state_action_list = []
-                self.reward_list = []
-                self.abstracter.inspector.sync_scores()
 
             self.data.update(
                 obs_next=obs_next,
@@ -363,7 +344,6 @@ class EpisodicCollector(object):
                 self.data, buffer_ids=ready_env_ids
             )
 
-
             ##################### added for episodic control ############################################
             for i in range(self.env_num):
                 self.abstracters[i].append(feature[i], rew[i], done[i])
@@ -376,8 +356,8 @@ class EpisodicCollector(object):
                     self.reward_lists[i] = []
                     self.inspector.sync_scores()
                     
-                    u_bound = i*10000 + 9999
-                    l_bound = i*10000
+                    u_bound = i*self.per_buffer_size + self.per_buffer_size - 1
+                    l_bound = i*self.per_buffer_size
                     
                     if ep_idx[i] + ep_len[i] > u_bound:
                         update_len = u_bound - ep_idx[i]
