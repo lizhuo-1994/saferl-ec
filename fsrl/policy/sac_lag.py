@@ -160,7 +160,7 @@ class SACLagrangian(LagrangianPolicy):
         **kwargs: Any,
     ) -> Batch:
         obs = batch[input]
-        logits, hidden = self.actor(obs, state=state, info=batch.info)
+        logits, hidden, feature = self.actor(obs, state=state, info=batch.info)
         assert isinstance(logits, tuple)
         dist = Independent(Normal(*logits), 1)
         if self._deterministic_eval and not self.training:
@@ -179,7 +179,8 @@ class SACLagrangian(LagrangianPolicy):
             act=squashed_action,
             state=hidden,
             dist=dist,
-            log_prob=log_prob
+            log_prob=log_prob,
+            feature=feature
         )
 
     def critics_loss(

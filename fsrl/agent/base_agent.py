@@ -233,12 +233,12 @@ class OffpolicyAgent(BaseAgent):
         
         import json, os, datetime
         now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
-        save_path = 'result/{0}/{1}'.format(self.task, self.algo)
+        save_path = 'result/{0}/{1}/{2}'.format(self.task, self.algo, now)
         os.makedirs(save_path, exist_ok=True)
         
-        with open(save_path + '/' + now + '_returns.json', 'w') as f:
+        with open(save_path + '/returns.json', 'w') as f:
             json.dump(return_list, f)
-        with open(save_path + '/' + now + '_costs.json', 'w') as f:
+        with open(save_path + '/costs.json', 'w') as f:
             json.dump(cost_list, f)
 
         return epoch, _epoch_stat, info
@@ -377,12 +377,12 @@ class OnpolicyAgent(BaseAgent):
         
         import json, os, datetime
         now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
-        save_path = 'result/{0}/{1}'.format(self.task, self.algo)
+        save_path = 'result/{0}/{1}/{2}'.format(self.task, self.algo, now)
         os.makedirs(save_path, exist_ok=True)
         
-        with open(save_path + '/' + now + '_returns.json', 'w') as f:
+        with open(save_path + '/returns.json', 'w') as f:
             json.dump(return_list, f)
-        with open(save_path + '/' + now + '_costs.json', 'w') as f:
+        with open(save_path + '/costs.json', 'w') as f:
             json.dump(cost_list, f)
 
         return epoch, _epoch_stat, info

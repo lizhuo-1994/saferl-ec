@@ -80,10 +80,10 @@ class DoubleCritic(nn.Module):
                 dtype=torch.float32,
             ).flatten(1)
             obs = torch.cat([obs, act], dim=1)
-        logits1, hidden = self.preprocess1(obs)
-        logits1 = self.last1(logits1)
-        logits2, hidden = self.preprocess2(obs)
-        logits2 = self.last2(logits2)
+        logits1, hidden, feature = self.preprocess1(obs)
+        logits1, feature = self.last1(logits1)
+        logits2, hidden, feature = self.preprocess2(obs)
+        logits2, feature = self.last2(logits2)
         return [logits1, logits2]
 
     def predict(

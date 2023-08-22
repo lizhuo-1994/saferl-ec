@@ -53,6 +53,7 @@ class EpisodicCollector(object):
         self.feature_lists = []
         self.reward_lists = []
         self.ep_reward = []
+        self.cost_lists = []
 
         for i in range(self.env_num):
             abstracter = Abstracter(
@@ -63,6 +64,7 @@ class EpisodicCollector(object):
             self.abstracters.append(abstracter)
             self.feature_lists.append([])
             self.reward_lists.append([])
+            self.cost_lists.append([])
 
         ########## result ###########
         self.ep_reward_recorder = []
@@ -346,14 +348,16 @@ class EpisodicCollector(object):
 
             ##################### added for episodic control ############################################
             for i in range(self.env_num):
-                self.abstracters[i].append(feature[i], rew[i], done[i])
+                self.abstracters[i].append(feature[i], rew[i], cost[i], done[i])
                 self.feature_lists[i].append(feature[i])
                 self.reward_lists[i].append(rew[i])
+                self.cost_lists[i].append(cost[i])
         
                 if done[i]:
-                    self.ep_reward = self.abstracters[i].reward_shaping(np.array(self.feature_lists[i]), np.array(self.reward_lists[i]))
+                    self.ep_reward = self.abstracters[i].reward_shaping(np.array(self.feature_lists[i]), np.array(self.reward_lists[i]), np.array(self.cost_lists[i]))
                     self.feature_lists[i] = []
                     self.reward_lists[i] = []
+                    self.cost_lists[i] = []
                     self.inspector.sync_scores()
                     
                     u_bound = i*self.per_buffer_size + self.per_buffer_size - 1
