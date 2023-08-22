@@ -45,9 +45,9 @@ class ScoreInspector:
         self.max_state = np.dot(np.array([self.state_max for i in range(self.raw_state_dim)]), self.project_matrix)
 
     
-        self.min_avg_return = 0
+        self.min_avg_return = 0.001
         self.max_avg_return = 1
-        self.min_avg_cost   = 0
+        self.min_avg_cost   = 0.001
         self.max_avg_cost   = 1
 
         #self.scores = scores
@@ -100,8 +100,8 @@ class ScoreInspector:
         t.daemon = True
         t.start()
 
-    def compute_score(returns, costs):
-        return np.clip(returns/costs, 0, 1)
+    def compute_score(self, returns, costs):
+        return np.clip(returns/costs, 0, 10)
 
     def pattern_abstract(self, con_states, rewards, costs):
 
@@ -144,18 +144,18 @@ class ScoreInspector:
                 new_states_info[pattern]['time'] += 1
                 average_return = new_states_info[pattern]['returns'] / new_states_info[pattern]['time']
                 average_cost = new_states_info[pattern]['costs'] / new_states_info[pattern]['time']
-                norm_return = (average_return - self.min_avg_return)  / return_normal_scale
-                norm_cost   = (average_cost - self.min_avg_cost)  / cost_normal_scale
-                score = self.compute_score(norm_return, norm_cost)
+                new_states_info[pattern]['return_score'] = (average_return - self.min_avg_return)  / return_normal_scale
+                new_states_info[pattern]['cost_score']   = (average_cost - self.min_avg_cost)  / cost_normal_scale + 0.01
+                score = np.clip(new_states_info[pattern]['return_score'] / new_states_info[pattern]['cost_score'], 0, 10)
                 new_states_info[pattern]['score'] =  score
             else:
                 new_states_info[pattern] = {}
                 new_states_info[pattern]['returns'] = returns
                 new_states_info[pattern]['costs'] = costs
                 new_states_info[pattern]['time'] = 1
-                norm_return = (average_return - self.min_avg_return)  / return_normal_scale
-                norm_cost   = (average_cost - self.min_avg_cost)  / cost_normal_scale
-                score = self.compute_score(norm_return, norm_cost)
+                new_states_info[pattern]['return_score'] = (returns - self.min_avg_return)  / return_normal_scale
+                new_states_info[pattern]['cost_score']   = (costs - self.min_avg_cost)  / cost_normal_scale + 0.01
+                score = np.clip(new_states_info[pattern]['return_score'] / new_states_info[pattern]['cost_score'], 0, 10)
                 new_states_info[pattern]['score'] =  score
 
         self.s_token.put((new_states_info, min_avg_return, max_avg_return, min_avg_cost, max_avg_cost))
@@ -207,8 +207,16 @@ class Abstracter:
         
         if score != None:
             if  time > 0:
-                delta = (score - self.inspector.score_avg) * self.epsilon * 10
-                # print(abs_pattern, score, self.inspector.score_avg, rewards[0], rewards[0] + delta)
+                delta = (score - self.inspector.score_avg) * self.epsilon
+                print(
+                    pattern, 
+                    score, 
+                    self.inspector.score_avg, 
+                    self.inspector.states_info[pattern]["return_score"], 
+                    self.inspector.states_info[pattern]["cost_score"], 
+                    rewards[0], 
+                    rewards[0] + delta
+                )
                 rewards[0] += delta
                 
         return rewards[0]

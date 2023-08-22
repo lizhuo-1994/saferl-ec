@@ -29,7 +29,7 @@ class EpisodicCollector(object):
         exploration_noise: bool = False,
         episodic_step: int = 1,
         grid_num: int = 5,
-        epsilon: float = 0.1
+        epsilon: float = 0.01
     ) -> None:
         super().__init__()
         if isinstance(env, gym.Env) and not hasattr(env, "__len__"):
