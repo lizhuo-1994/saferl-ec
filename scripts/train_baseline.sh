@@ -24,18 +24,25 @@
 # python  train_cvpo_agent.py --task SafetyCarCircle-v0
 # python  train_cvpo_agent.py --task SafetyCarCircle-v0
 # python  train_cvpo_agent.py --task SafetyCarCircle-v0
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 1
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 1
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 1
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 2
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 2
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 2
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 3
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 3
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic 3
+
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 1
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 1
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 1
+
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 2
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 2
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 2
+
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 3
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 3
+python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 3
+
 
 # python  train_focops_agent.py --task SafetyCarCircle-v0
 # python  train_focops_agent.py --task SafetyCarCircle-v0

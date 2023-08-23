@@ -126,7 +126,7 @@ def train(args: TrainCfg):
 
 
     ########################### added for episodic control ##############################
-    agent.algo = args.prefix
+    agent.algo = "sec" if args.episodic else args.prefix
     agent.task = args.task
     agent.episodic = args.episodic
     agent.episodic_step = args.episodic_step

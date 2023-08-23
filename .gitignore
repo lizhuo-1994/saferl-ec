@@ -4,6 +4,7 @@
 **/wandb/**
 **/misc/**
 nohup
+*.out
 log
 wandb
 result

@@ -208,15 +208,15 @@ class Abstracter:
         if score != None:
             if  time > 0:
                 delta = (score - self.inspector.score_avg) * self.epsilon
-                print(
-                    pattern, 
-                    score, 
-                    self.inspector.score_avg, 
-                    self.inspector.states_info[pattern]["return_score"], 
-                    self.inspector.states_info[pattern]["cost_score"], 
-                    rewards[0], 
-                    rewards[0] + delta
-                )
+                # print(
+                #     pattern, 
+                #     score, 
+                #     self.inspector.score_avg, 
+                #     self.inspector.states_info[pattern]["return_score"], 
+                #     self.inspector.states_info[pattern]["cost_score"], 
+                #     rewards[0], 
+                #     rewards[0] + delta
+                # )
                 rewards[0] += delta
                 
         return rewards[0]
