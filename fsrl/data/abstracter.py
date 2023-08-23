@@ -11,18 +11,14 @@ import json
 
 class ScoreInspector:
     
-    def __init__(self, step, grid_num):
+    def __init__(self, state_dim, step, grid_num):
 
         self.step = step
         self.grid_num = grid_num
-        self.raw_state_dim = 128
-        self.state_dim = 24
-        self.state_min = 0
+        self.state_dim = state_dim
+        self.state_min = -1
         self.state_max = 1
-        self.basic_states = None
-        self.basic_states_times = None
-        self.basic_states_scores = None
-        self.basic_states_returns = None
+        self.reduction = True if self.state_dim > 24 else False
      
         self.score_avg = None
         self.pcaModel = None
@@ -40,15 +36,20 @@ class ScoreInspector:
     
     def setup(self):
 
-        self.project_matrix = np.random.uniform(-1,1,(self.raw_state_dim,self.state_dim))
-        self.min_state = np.dot(np.array([self.state_min for i in range(self.raw_state_dim)]), self.project_matrix)
-        self.max_state = np.dot(np.array([self.state_max for i in range(self.raw_state_dim)]), self.project_matrix)
+        if self.reduction:
+            self.project_matrix = np.random.uniform(0, 1, (self.state_dim, 24))
+            self.min_state = np.dot(np.array([self.state_min for i in range(self.state_dim)]), self.project_matrix)
+            self.max_state = np.dot(np.array([self.state_max for i in range(self.state_dim)]), self.project_matrix)
+
+        else:
+            self.min_state = np.array([self.state_min for i in range(self.state_dim)])
+            self.max_state = np.array([self.state_max for i in range(self.state_dim)])
 
     
-        self.min_avg_return = 0.001
-        self.max_avg_return = 1
-        self.min_avg_cost   = 0.001
-        self.max_avg_cost   = 1
+        self.min_avg_return = 0
+        self.max_avg_return = 500
+        self.min_avg_cost   = 0
+        self.max_avg_cost   = 200
 
         #self.scores = scores
         self.score_avg = 0
@@ -57,7 +58,6 @@ class ScoreInspector:
         self.states_info = dict()
         
         #self.pcaModel = joblib.load(config.PCA_MODEL_PATH)
-        print(self.min_state, self.max_state, self.grid_num)
         self.grid = Grid(self.min_state, self.max_state, self.grid_num)   
 
     def save(self, env_name):
@@ -70,9 +70,9 @@ class ScoreInspector:
     
     def inquery(self, pattern):
         if pattern in self.states_info.keys():
-            return self.states_info[pattern]['score'], self.states_info[pattern]['time'] 
+            return self.states_info[pattern]['return_score'], self.states_info[pattern]['cost_score'], self.states_info[pattern]['time'] 
         else:
-            return None, None
+            return None, None, None
 
     def sync_scores(self):
         if self.s_token.qsize() > 0:
@@ -89,7 +89,7 @@ class ScoreInspector:
                 self.max_avg_cost = max_avg_cost
 
             self.states_info.update(new_states_info)
-            self.score_avg = np.mean([self.states_info[abs_state]['score'] for abs_state in self.states_info.keys()])            
+            self.score_avg = np.mean([self.states_info[abs_state]['return_score'] for abs_state in self.states_info.keys()])  
             
     
     def start_pattern_abstract(self, con_states, rewards, costs):
@@ -99,9 +99,6 @@ class ScoreInspector:
         t = Process(target = self.pattern_abstract, args = (con_states, rewards, costs))
         t.daemon = True
         t.start()
-
-    def compute_score(self, returns, costs):
-        return np.clip(returns/costs, 0, 10)
 
     def pattern_abstract(self, con_states, rewards, costs):
 
@@ -113,8 +110,7 @@ class ScoreInspector:
         max_avg_cost   = self.max_avg_cost
 
         new_states_info = dict()
-        return_normal_scale = self.max_avg_return - self.min_avg_return
-        cost_normal_scale = self.max_avg_cost - self.min_avg_cost
+        
 
         returns = sum(rewards)
         costs   = sum(costs)
@@ -134,6 +130,14 @@ class ScoreInspector:
             if costs > self.max_avg_cost:
                 max_avg_cost = costs
 
+            min_avg_return = min(returns, min_avg_return)
+            max_avg_return = max(returns, max_avg_return)
+            min_avg_cost   = min(costs, min_avg_cost)
+            max_avg_cost   = max(costs, max_avg_cost)
+
+            return_normal_scale = max_avg_return -  min_avg_return
+            cost_normal_scale = max_avg_cost -  min_avg_cost
+
             pattern = abs_states[i:i+self.step]
             pattern = '-'.join(pattern)
 
@@ -144,19 +148,17 @@ class ScoreInspector:
                 new_states_info[pattern]['time'] += 1
                 average_return = new_states_info[pattern]['returns'] / new_states_info[pattern]['time']
                 average_cost = new_states_info[pattern]['costs'] / new_states_info[pattern]['time']
-                new_states_info[pattern]['return_score'] = (average_return - self.min_avg_return)  / return_normal_scale
-                new_states_info[pattern]['cost_score']   = (average_cost - self.min_avg_cost)  / cost_normal_scale + 0.01
-                score = np.clip(new_states_info[pattern]['return_score'] / new_states_info[pattern]['cost_score'], 0, 10)
-                new_states_info[pattern]['score'] =  score
+                new_states_info[pattern]['return_score'] = (average_return -  min_avg_return)  / return_normal_scale
+                new_states_info[pattern]['cost_score']   = (average_cost -  min_avg_cost)  / cost_normal_scale
+
             else:
                 new_states_info[pattern] = {}
                 new_states_info[pattern]['returns'] = returns
                 new_states_info[pattern]['costs'] = costs
                 new_states_info[pattern]['time'] = 1
-                new_states_info[pattern]['return_score'] = (returns - self.min_avg_return)  / return_normal_scale
-                new_states_info[pattern]['cost_score']   = (costs - self.min_avg_cost)  / cost_normal_scale + 0.01
-                score = np.clip(new_states_info[pattern]['return_score'] / new_states_info[pattern]['cost_score'], 0, 10)
-                new_states_info[pattern]['score'] =  score
+                new_states_info[pattern]['return_score'] = (returns -  min_avg_return)  / return_normal_scale
+                new_states_info[pattern]['cost_score']   = (costs -  min_avg_cost)  / cost_normal_scale
+ 
 
         self.s_token.put((new_states_info, min_avg_return, max_avg_return, min_avg_cost, max_avg_cost))
 
@@ -188,7 +190,8 @@ class Abstracter:
         self.con_dones.append(done)
 
         if done:
-            self.con_states = self.dim_reduction(self.con_states)
+            if self.inspector.reduction:
+                self.con_states = self.dim_reduction(self.con_states)
             self.inspector.start_pattern_abstract(self.con_states, self.con_reward, self.con_cost)
             self.clear()
     
@@ -203,17 +206,16 @@ class Abstracter:
         if len(abs_pattern) != self.step:
             return rewards[0]
         pattern = '-'.join(abs_pattern)
-        score, time = self.inspector.inquery(pattern)
+        return_score, cost_score, time = self.inspector.inquery(pattern)
         
-        if score != None:
+        if return_score != None:
             if  time > 0:
-                delta = (score - self.inspector.score_avg) * self.epsilon
+                delta = (return_score - cost_score) * self.epsilon
                 # print(
                 #     pattern, 
-                #     score, 
+                #     return_score,
+                #     cost_score,
                 #     self.inspector.score_avg, 
-                #     self.inspector.states_info[pattern]["return_score"], 
-                #     self.inspector.states_info[pattern]["cost_score"], 
                 #     rewards[0], 
                 #     rewards[0] + delta
                 # )
@@ -225,8 +227,9 @@ class Abstracter:
 
     def reward_shaping(self, state_list, reward_list, cost_list):
 
-        state_list = self.dim_reduction(state_list)
-        
+        if self.inspector.reduction:
+            state_list = self.dim_reduction(state_list)
+
         abs_states = self.inspector.discretize_states(state_list)
         
         shaping_reward_list = copy.deepcopy(reward_list)

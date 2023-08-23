@@ -27,9 +27,10 @@ class EpisodicCollector(object):
         buffer: Optional[ReplayBuffer] = None,
         preprocess_fn: Optional[Callable[..., Batch]] = None,
         exploration_noise: bool = False,
+        state_dim: int = 16,
         episodic_step: int = 1,
         grid_num: int = 5,
-        epsilon: float = 0.01
+        epsilon: float = 0.1
     ) -> None:
         super().__init__()
         if isinstance(env, gym.Env) and not hasattr(env, "__len__"):
@@ -47,7 +48,7 @@ class EpisodicCollector(object):
         self.reset(False)
 
         ########## NECSA ###########
-        self.inspector = ScoreInspector(episodic_step, grid_num)
+        self.inspector = ScoreInspector(state_dim, episodic_step, grid_num)
 
         self.abstracters = []
         self.feature_lists = []
@@ -290,6 +291,7 @@ class EpisodicCollector(object):
             feature = result.get("feature", None)
             feature = feature.detach().cpu().numpy() 
 
+            
             # get bounded and remapped actions first (not saved into buffer)
             action_remap = self.policy.map_action(self.data.act)
             # step in env
@@ -348,8 +350,11 @@ class EpisodicCollector(object):
 
             ##################### added for episodic control ############################################
             for i in range(self.env_num):
-                self.abstracters[i].append(feature[i], rew[i], cost[i], done[i])
-                self.feature_lists[i].append(feature[i])
+                norm_obs = (self.data.obs[i] - np.min(self.data.obs[i])) / (np.max(self.data.obs[i]) - np.min(self.data.obs[i]))* 2 - 1
+                norm_act = action_remap[i]
+                feature = np.concatenate((norm_obs, norm_act))
+                self.abstracters[i].append(feature, rew[i], cost[i], done[i])
+                self.feature_lists[i].append(feature)
                 self.reward_lists[i].append(rew[i])
                 self.cost_lists[i].append(cost[i])
         

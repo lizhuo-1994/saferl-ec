@@ -50,6 +50,7 @@ class BaseAgent(ABC):
         self.episodic_step = 1
         self.grid_num = 5
         self.epsilon = 0.1
+        self.state_dim = 16
 
     @abstractmethod
     def learn(self, *args, **kwargs) -> None:
@@ -175,6 +176,7 @@ class OffpolicyAgent(BaseAgent):
                 train_envs,
                 buffer,
                 exploration_noise=True,
+                state_dim = self.state_dim,
                 episodic_step = self.episodic_step,
                 grid_num = self.grid_num,
                 epsilon = self.epsilon
@@ -320,6 +322,7 @@ class OnpolicyAgent(BaseAgent):
                 train_envs,
                 buffer,
                 exploration_noise=True,
+                state_dim = self.state_dim,
                 episodic_step = self.episodic_step,
                 grid_num = self.grid_num,
                 epsilon = self.epsilon

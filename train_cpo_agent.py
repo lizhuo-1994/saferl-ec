@@ -118,10 +118,10 @@ def train(args: TrainCfg):
         action_bound_method=args.action_bound_method,
     )
 
-
     ########################### added for episodic control ##############################
     agent.algo = "sec" if args.episodic else args.prefix
     agent.task = args.task
+    agent.state_dim = demo_env.observation_space.shape[0] + demo_env.action_space.shape[0]
     agent.episodic = args.episodic
     agent.episodic_step = args.episodic_step
     agent.grid_num = args.grid_num

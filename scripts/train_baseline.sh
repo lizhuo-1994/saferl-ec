@@ -1,5 +1,5 @@
 # SafetyCarCircle-v0
-# SafetyCarCircle-v0
+# SafetyDroneCircle-v0
 # SafetyBallCircle-v0
 # SafetyAntRun-v0
 
@@ -31,17 +31,21 @@
 # python  train_ddpgl_agent.py --task SafetyCarCircle-v0
 # python  train_ddpgl_agent.py --task SafetyCarCircle-v0
 
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 1
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 1
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 1
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50
 
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 2
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 2
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 2
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 1 --epoch 50
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 1 --epoch 50
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 1 --epoch 50
 
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 3
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 3
-python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --episodic True --episodic_step 3
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 2 --epoch 50
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 2 --epoch 50
+# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 2 --epoch 50
+
+python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 3 --epoch 50
+python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 3 --epoch 50
+python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --episodic True --episodic_step 3 --epoch 50
 
 
 # python  train_focops_agent.py --task SafetyCarCircle-v0
