@@ -8,6 +8,7 @@ from multiprocessing import Process
 import scipy.stats as stats
 from multiprocessing import Queue
 import json
+import math
 
 class ScoreInspector:
     
@@ -206,11 +207,12 @@ class Abstracter:
         if len(abs_pattern) != self.step:
             return rewards[0]
         pattern = '-'.join(abs_pattern)
-        return_score, cost_score, time = self.inspector.inquery(pattern)
+        return_score, cost_score, times = self.inspector.inquery(pattern)
         
         if return_score != None:
-            if  time > 0:
-                delta = (return_score - cost_score) * self.epsilon
+            if  times > 0:
+                novelty = 1 / math.e ** min(times - 1, 10)
+                delta = (return_score - cost_score) * novelty
                 # print(
                 #     pattern, 
                 #     return_score,
