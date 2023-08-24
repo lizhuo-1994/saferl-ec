@@ -212,7 +212,7 @@ class Abstracter:
         if return_score != None:
             if  times > 0:
                 novelty = 1 / math.e ** min(times - 1, 10)
-                delta = (return_score - cost_score) * novelty
+                delta = (return_score - cost_score + novelty) * self.epsilon
                 # print(
                 #     pattern, 
                 #     return_score,
