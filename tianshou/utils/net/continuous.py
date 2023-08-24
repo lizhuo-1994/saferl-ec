@@ -1,3 +1,4 @@
+import warnings
 from typing import Any, Dict, Optional, Sequence, Tuple, Type, Union
 
 import numpy as np
@@ -54,7 +55,7 @@ class Actor(nn.Module):
             hidden_sizes,
             device=self.device
         )
-        self._max = max_action
+        self.max_action = max_action
 
     def forward(
         self,
@@ -63,10 +64,9 @@ class Actor(nn.Module):
         info: Dict[str, Any] = {},
     ) -> Tuple[torch.Tensor, Any]:
         """Mapping: obs -> logits -> action."""
-        logits, hidden, features = self.preprocess(obs, state)
-        logits, features = self.last(logits)
-        logits = self._max * torch.tanh(logits)
-        return logits, hidden, features
+        logits, hidden = self.preprocess(obs, state)
+        logits = self.max_action * torch.tanh(self.last(logits))
+        return logits, hidden
 
 
 class Critic(nn.Module):
@@ -125,18 +125,18 @@ class Critic(nn.Module):
         """Mapping: (s, a) -> logits -> Q(s, a)."""
         obs = torch.as_tensor(
             obs,
-            device=self.device,  # type: ignore
+            device=self.device,
             dtype=torch.float32,
         ).flatten(1)
         if act is not None:
             act = torch.as_tensor(
                 act,
-                device=self.device,  # type: ignore
+                device=self.device,
                 dtype=torch.float32,
             ).flatten(1)
             obs = torch.cat([obs, act], dim=1)
-        logits, hidden, features = self.preprocess(obs)
-        logits, features = self.last(logits)
+        logits, hidden = self.preprocess(obs)
+        logits = self.last(logits)
         return logits
 
 
@@ -179,6 +179,11 @@ class ActorProb(nn.Module):
         preprocess_net_output_dim: Optional[int] = None,
     ) -> None:
         super().__init__()
+        if unbounded and not np.isclose(max_action, 1.0):
+            warnings.warn(
+                "Note that max_action input will be discarded when unbounded is True."
+            )
+            max_action = 1.0
         self.preprocess = preprocess_net
         self.device = device
         self.output_dim = int(np.prod(action_shape))
@@ -199,7 +204,7 @@ class ActorProb(nn.Module):
             )
         else:
             self.sigma_param = nn.Parameter(torch.zeros(self.output_dim, 1))
-        self._max = max_action
+        self.max_action = max_action
         self._unbounded = unbounded
 
     def forward(
@@ -209,17 +214,17 @@ class ActorProb(nn.Module):
         info: Dict[str, Any] = {},
     ) -> Tuple[Tuple[torch.Tensor, torch.Tensor], Any]:
         """Mapping: obs -> logits -> (mu, sigma)."""
-        logits, hidden, features = self.preprocess(obs, state)
-        mu, features = self.mu(logits)
+        logits, hidden = self.preprocess(obs, state)
+        mu = self.mu(logits)
         if not self._unbounded:
-            mu = self._max * torch.tanh(mu)
+            mu = self.max_action * torch.tanh(mu)
         if self._c_sigma:
-            sigma = torch.clamp(self.sigma(logits)[0], min=SIGMA_MIN, max=SIGMA_MAX).exp()
+            sigma = torch.clamp(self.sigma(logits), min=SIGMA_MIN, max=SIGMA_MAX).exp()
         else:
             shape = [1] * len(mu.shape)
             shape[1] = -1
             sigma = (self.sigma_param.view(shape) + torch.zeros_like(mu)).exp()
-        return (mu, sigma), state, features
+        return (mu, sigma), state
 
 
 class RecurrentActorProb(nn.Module):
@@ -241,6 +246,11 @@ class RecurrentActorProb(nn.Module):
         conditioned_sigma: bool = False,
     ) -> None:
         super().__init__()
+        if unbounded and not np.isclose(max_action, 1.0):
+            warnings.warn(
+                "Note that max_action input will be discarded when unbounded is True."
+            )
+            max_action = 1.0
         self.device = device
         self.nn = nn.LSTM(
             input_size=int(np.prod(state_shape)),
@@ -255,7 +265,7 @@ class RecurrentActorProb(nn.Module):
             self.sigma = nn.Linear(hidden_layer_size, output_dim)
         else:
             self.sigma_param = nn.Parameter(torch.zeros(output_dim, 1))
-        self._max = max_action
+        self.max_action = max_action
         self._unbounded = unbounded
 
     def forward(
@@ -267,7 +277,7 @@ class RecurrentActorProb(nn.Module):
         """Almost the same as :class:`~tianshou.utils.net.common.Recurrent`."""
         obs = torch.as_tensor(
             obs,
-            device=self.device,  # type: ignore
+            device=self.device,
             dtype=torch.float32,
         )
         # obs [bsz, len, dim] (training) or [bsz, dim] (evaluation)
@@ -290,7 +300,7 @@ class RecurrentActorProb(nn.Module):
         logits = obs[:, -1]
         mu = self.mu(logits)
         if not self._unbounded:
-            mu = self._max * torch.tanh(mu)
+            mu = self.max_action * torch.tanh(mu)
         if self._c_sigma:
             sigma = torch.clamp(self.sigma(logits), min=SIGMA_MIN, max=SIGMA_MAX).exp()
         else:
@@ -340,7 +350,7 @@ class RecurrentCritic(nn.Module):
         """Almost the same as :class:`~tianshou.utils.net.common.Recurrent`."""
         obs = torch.as_tensor(
             obs,
-            device=self.device,  # type: ignore
+            device=self.device,
             dtype=torch.float32,
         )
         # obs [bsz, len, dim] (training) or [bsz, dim] (evaluation)
@@ -353,7 +363,7 @@ class RecurrentCritic(nn.Module):
         if act is not None:
             act = torch.as_tensor(
                 act,
-                device=self.device,  # type: ignore
+                device=self.device,
                 dtype=torch.float32,
             )
             obs = torch.cat([obs, act], dim=1)

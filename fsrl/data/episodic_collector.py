@@ -275,7 +275,6 @@ class EpisodicCollector(object):
                     result = self.policy(self.data, last_state)
 
                 
-
                 # update state / act / policy into self.data
                 policy = result.get("policy", Batch())
                 assert isinstance(policy, Batch)
@@ -286,10 +285,6 @@ class EpisodicCollector(object):
                 if self.exploration_noise:
                     act = self.policy.exploration_noise(act, self.data)
                 self.data.update(policy=policy, act=act)
-
-            ############ get features ###############
-            feature = result.get("feature", None)
-            feature = feature.detach().cpu().numpy() 
 
             
             # get bounded and remapped actions first (not saved into buffer)
@@ -349,25 +344,26 @@ class EpisodicCollector(object):
             )
 
             ##################### added for episodic control ############################################
-            for i in range(self.env_num):
+
+            for i in range(len(ready_env_ids)):
+                env_id = ready_env_ids[i]
                 norm_obs = (self.data.obs[i] - np.min(self.data.obs[i])) / (np.max(self.data.obs[i]) - np.min(self.data.obs[i]))* 2 - 1
                 norm_act = action_remap[i]
                 feature = np.concatenate((norm_obs, norm_act))
-                self.abstracters[i].append(feature, rew[i], cost[i], done[i])
-                self.feature_lists[i].append(feature)
-                self.reward_lists[i].append(rew[i])
-                self.cost_lists[i].append(cost[i])
+                self.abstracters[env_id].append(feature, rew[i], cost[i], done[i])
+                self.feature_lists[env_id].append(feature)
+                self.reward_lists[env_id].append(rew[i])
+                self.cost_lists[env_id].append(cost[i])
         
                 if done[i]:
-                    self.ep_reward = self.abstracters[i].reward_shaping(np.array(self.feature_lists[i]), np.array(self.reward_lists[i]), np.array(self.cost_lists[i]))
-                    self.feature_lists[i] = []
-                    self.reward_lists[i] = []
-                    self.cost_lists[i] = []
+                    self.ep_reward = self.abstracters[env_id].reward_shaping(np.array(self.feature_lists[env_id]), np.array(self.reward_lists[env_id]), np.array(self.cost_lists[env_id]))
+                    self.feature_lists[env_id] = []
+                    self.reward_lists[env_id] = []
+                    self.cost_lists[env_id] = []
                     self.inspector.sync_scores()
-                    
-                    u_bound = i*self.per_buffer_size + self.per_buffer_size - 1
-                    l_bound = i*self.per_buffer_size
-                    
+
+                    u_bound = env_id *self.per_buffer_size + self.per_buffer_size - 1
+                    l_bound = env_id *self.per_buffer_size
                     if ep_idx[i] + ep_len[i] > u_bound:
                         update_len = u_bound - ep_idx[i]
                         self.buffer.rew[ep_idx[i]: u_bound + 1] = self.ep_reward[:update_len + 1]
@@ -398,6 +394,7 @@ class EpisodicCollector(object):
 
                 # remove surplus env id from ready_env_ids to avoid bias in selecting
                 # environments
+
                 if n_episode:
                     surplus_env_num = len(ready_env_ids) - (n_episode - episode_count)
                     if surplus_env_num > 0:

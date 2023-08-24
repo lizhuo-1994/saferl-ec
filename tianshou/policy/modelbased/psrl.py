@@ -168,7 +168,7 @@ class PSRLPolicy(BasePolicy):
         rew_mean_prior: np.ndarray,
         rew_std_prior: np.ndarray,
         discount_factor: float = 0.99,
-        epsilon: float = 0.1,
+        epsilon: float = 0.01,
         add_done_loop: bool = False,
         **kwargs: Any,
     ) -> None:

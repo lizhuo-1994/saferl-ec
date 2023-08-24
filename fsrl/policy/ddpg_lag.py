@@ -160,8 +160,8 @@ class DDPGLagrangian(LagrangianPolicy):
         """
         model = getattr(self, model)
         obs = batch[input]
-        actions, hidden, feature = model(obs, state=state, info=batch.info)
-        return Batch(act=actions, state=hidden, feature=feature)
+        actions, hidden = model(obs, state=state, info=batch.info)
+        return Batch(act=actions, state=hidden)
 
     def critics_loss(
         self, batch: Batch, critics: torch.nn.Module, optimizer: torch.optim.Optimizer
