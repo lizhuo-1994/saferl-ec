@@ -175,7 +175,7 @@ class BasePolicy(ABC, nn.Module):
                 act = policy(batch).act  # doesn't map to the target action range act =
                 policy.map_action(act, batch)
         """
-        logits, hidden, feature = self.actor(batch.obs, state=state)
+        logits, hidden = self.actor(batch.obs, state=state)
         if isinstance(logits, tuple):
             dist = self.dist_fn(*logits)
         else:
@@ -187,7 +187,7 @@ class BasePolicy(ABC, nn.Module):
                 act = logits[0]
         else:
             act = dist.sample()
-        return Batch(logits=logits, act=act, state=hidden, dist=dist, feature=feature)
+        return Batch(logits=logits, act=act, state=hidden, dist=dist)
 
     def pre_update_fn(self, **kwarg: Any) -> Any:
         """Pre-process the policy or data before updating the policy.
