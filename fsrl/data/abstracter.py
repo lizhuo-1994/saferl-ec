@@ -211,7 +211,7 @@ class Abstracter:
         
         if return_score != None:
             if  times > 0:
-                delta = 0.5 - np.sqrt((return_score - 1) ** 2 + cost_score ** 2)
+                delta = 0.765 - np.sqrt((return_score - 1) ** 2 + cost_score ** 2)
                 delta = delta * self.epsilon
                 # novelty = 1 / math.e ** min(times - 1, 10)
                 # delta = (return_score - cost_score + novelty) * self.epsilon

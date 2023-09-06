@@ -1,10 +1,10 @@
 # SafetyBallCircle-v0 
-# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
-# pkill -f SafetyBallCircle
-# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
-# pkill -f SafetyBallCircle
-# python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
-# pkill -f SafetyBallCircle
+python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
+pkill -f SafetyBallCircle
+python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
+pkill -f SafetyBallCircle
+python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
+pkill -f SafetyBallCircle
 
 
 # SafetyAntRun-v0
