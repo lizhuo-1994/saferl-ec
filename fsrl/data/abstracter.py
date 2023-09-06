@@ -48,9 +48,9 @@ class ScoreInspector:
 
     
         self.min_avg_return = 0
-        self.max_avg_return = 500
+        self.max_avg_return = 10
         self.min_avg_cost   = 0
-        self.max_avg_cost   = 200
+        self.max_avg_cost   = 10
 
         #self.scores = scores
         self.score_avg = 0
@@ -212,6 +212,7 @@ class Abstracter:
         if return_score != None:
             if  times > 0:
                 delta = 0.5 - np.sqrt((return_score - 1) ** 2 + cost_score ** 2)
+                delta = delta * self.epsilon
                 # novelty = 1 / math.e ** min(times - 1, 10)
                 # delta = (return_score - cost_score + novelty) * self.epsilon
                 # print(

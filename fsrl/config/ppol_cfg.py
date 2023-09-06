@@ -66,7 +66,7 @@ class TrainCfg:
     episodic: bool = False
     episodic_step: int = 1
     grid_num: int = 5
-    epsilon: float = 0.1
+    epsilon: float = 1.0
 
 
 # bullet-safety-gym task default configs

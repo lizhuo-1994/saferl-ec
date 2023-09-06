@@ -50,7 +50,7 @@ class TrainCfg:
     action_bound_method: str = "clip"
     resume: bool = False  # TODO
     save_ckpt: bool = True  # set this to True to save the policy model
-    verbose: bool = False
+    verbose: bool = True
     render: bool = False
     # logger params
     logdir: str = "logs"
@@ -64,7 +64,7 @@ class TrainCfg:
     episodic: bool = False
     episodic_step: int = 1
     grid_num: int = 5
-    epsilon: float = 0.1
+    epsilon: float = 1.0
 
 
 # bullet-safety-gym task default configs
