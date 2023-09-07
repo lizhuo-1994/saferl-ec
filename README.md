@@ -2,7 +2,7 @@
   SEC is based on [tianshou](https://tianshou.readthedocs.io) platform and safe RL algorithm benchmark [FSRL](https://fsrl.readthedocs.io). Please refer to the original repo for details.
 
 
-## Requirements
+## Environment
   Ubuntu 20.04.6 LTS, NVIDIA GeForce GTX 1080 Ti, cuda 12.2, nvidia driver 535.86.05, and python 3.8.5
 
 ## Install
