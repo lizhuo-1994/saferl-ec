@@ -27,8 +27,8 @@ pkill -f SafetyDroneCircle
 
 # SafetyCarCircle-v0
 python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --epoch 50  --episodic True --episodic_step 3 
-pkill -f SafetyBallRun d
+pkill -f SafetyBallRun
 python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --epoch 50  --episodic True --episodic_step 3 
-pkill -f SafetyBallRun d
+pkill -f SafetyBallRun
 python  train_ddpgl_agent.py --task SafetyCarCircle-v0 --epoch 50  --episodic True --episodic_step 3
 pkill -f SafetyBallRun 

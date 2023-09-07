@@ -1,7 +1,7 @@
 # SafetyBallCircle-v0 
 # SafetyAntRun-v0
 # SafetyDroneCircle-v0
-# SafetyBallRun-v0
+# SafetyCarCircle-v0
 
 # SafetyHalfCheetahVelocityGymnasium-v1
 # SafetyHopperVelocityGymnasium-v1
@@ -92,27 +92,27 @@
 # python  train_trpol_agent.py --task SafetyDroneCircle-v0
 
 
-# SafetyBallRun-v0
-# python  train_cpo_agent.py --task SafetyBallRun-v0
-# python  train_cpo_agent.py --task SafetyBallRun-v0
-# python  train_cpo_agent.py --task SafetyBallRun-v0
+# SafetyCarCircle-v0
+# python  train_cpo_agent.py --task SafetyCarCircle-v0
+# python  train_cpo_agent.py --task SafetyCarCircle-v0
+# python  train_cpo_agent.py --task SafetyCarCircle-v0
 
-# python  train_cvpo_agent.py --task SafetyBallRun-v0
-# python  train_cvpo_agent.py --task SafetyBallRun-v0
-# python  train_cvpo_agent.py --task SafetyBallRun-v0
+# python  train_cvpo_agent.py --task SafetyCarCircle-v0
+# python  train_cvpo_agent.py --task SafetyCarCircle-v0
+# python  train_cvpo_agent.py --task SafetyCarCircle-v0
 
-# python  train_ddpgl_agent.py --task SafetyBallRun-v0
-# python  train_ddpgl_agent.py --task SafetyBallRun-v0
-# python  train_ddpgl_agent.py --task SafetyBallRun-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
+# python  train_ddpgl_agent.py --task SafetyCarCircle-v0
 
-# python  train_focops_agent.py --task SafetyBallRun-v0
-# python  train_focops_agent.py --task SafetyBallRun-v0
-# python  train_focops_agent.py --task SafetyBallRun-v0
+# python  train_focops_agent.py --task SafetyCarCircle-v0
+# python  train_focops_agent.py --task SafetyCarCircle-v0
+# python  train_focops_agent.py --task SafetyCarCircle-v0
 
-# python  train_ppol_agent.py --task SafetyBallRun-v0
-# python  train_ppol_agent.py --task SafetyBallRun-v0
-# python  train_ppol_agent.py --task SafetyBallRun-v0
+# python  train_ppol_agent.py --task SafetyCarCircle-v0
+# python  train_ppol_agent.py --task SafetyCarCircle-v0
+# python  train_ppol_agent.py --task SafetyCarCircle-v0
 
-# python  train_trpol_agent.py --task SafetyBallRun-v0
-# python  train_trpol_agent.py --task SafetyBallRun-v0
-# python  train_trpol_agent.py --task SafetyBallRun-v0
+# python  train_trpol_agent.py --task SafetyCarCircle-v0
+# python  train_trpol_agent.py --task SafetyCarCircle-v0
+# python  train_trpol_agent.py --task SafetyCarCircle-v0
