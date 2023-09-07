@@ -3,7 +3,7 @@
 
 
 ## Requirements
-  Ubuntu 20.04.6 LTS, cuda 12.2, nvidia driver 535.86.05, and python 3.8.5
+  Ubuntu 20.04.6 LTS, NVIDIA GeForce GTX 1080 Ti, cuda 12.2, nvidia driver 535.86.05, and python 3.8.5
 
 ## Install
   * pip3 install wheel==0.38.4
