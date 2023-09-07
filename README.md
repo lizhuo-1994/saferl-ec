@@ -1,5 +1,5 @@
 # Safe Reinforcement Learning via Episodic Control
-  * SEC is based on [tianshou](https://tianshou.readthedocs.io/en/master/index.html) platform and safe RL algorithm benchmark [FSRL](https://fsrl.readthedocs.io/). Please refer the original repo for details.
+    SEC is based on [tianshou](https://tianshou.readthedocs.io/en/master/index.html) platform and safe RL algorithm benchmark [FSRL](https://fsrl.readthedocs.io/). Please refer the original repo for details.
 
 
 ## Requirements
@@ -8,19 +8,19 @@
 
 ## Install
 
-    * pip3 install wheel==0.38.4
-    * pip3 install setuptools==68.0.0
-    * pip3 install -r requirements.txt
+    pip3 install wheel==0.38.4
+    pip3 install setuptools==68.0.0
+    pip3 install -r requirements.txt
 
 ## Implementation:
 
-    *The implementation of episodic memory, state measurement, and reward shaping are in fsrl/data/abstracter.py
+    The implementation of episodic memory, state measurement, and reward shaping are in fsrl/data/abstracter.py
 
 ## Execution:
   
-    * python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
+    python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
 
-    * bash scripts/train_navigation_episodic.sh
+    bash scripts/train_navigation_episodic.sh
 
 ## Experiment results:
 
