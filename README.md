@@ -4,28 +4,30 @@
 
 ## Requirements
 
-  * Ubuntu 20.04, cuda 12.2, nvidia driver 535.86.05, and python 3.8.5
+    * Ubuntu 20.04, cuda 12.2, nvidia driver 535.86.05, and python 3.8.5
 
 ## Install
 
-  * pip3 install -r requirements.txt
+    * pip3 install wheel==0.38.4
+    * pip3 install setuptools==68.0.0
+    * pip3 install -r requirements.txt
 
 ## Execution:
 
-    The implementation of episodic memory, state measurement, and reward shaping are in:
+    * The implementation of episodic memory, state measurement, and reward shaping are in:
         
         * fsrl/data/abstracter.py
 
 ## Execution:
   
-  * Example:
+    * Example:
 
         python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
 
-  * Execute the scripts:
+    * Execute the scripts:
          
         bash scripts/train_navigation_episodic.sh
 
 ## Experiment results:
 
-  * Data will be automatically saved into ./result
+    * Data will be automatically saved into ./result
