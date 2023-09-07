@@ -16,7 +16,7 @@
 ## Execution:
   * python  train_ddpgl_agent.py --task SafetyBallCircle-v0 --epoch 50  --episodic True --episodic_step 3 
 
-  or
+    or
 
   * bash scripts/train_navigation_episodic.sh
 
