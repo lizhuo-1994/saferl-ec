@@ -1,5 +1,5 @@
 # Safe Reinforcement Learning via Episodic Control
-  SEC is based on [tianshou](https://tianshou.readthedocs.io) platform and safe RL algorithm benchmark [FSRL](https://fsrl.readthedocs.io). Please refer the original repo for details.
+  SEC is based on [tianshou](https://tianshou.readthedocs.io) platform and safe RL algorithm benchmark [FSRL](https://fsrl.readthedocs.io). Please refer to the original repo for details.
 
 
 ## Requirements
