@@ -4,14 +4,10 @@
 
 ## Requirements
 
-  * Ubuntu 20.04, cuda 12.2, nvidia driver 535.86.05, python 3.8.5
+  * Ubuntu 20.04, cuda 12.2, nvidia driver 535.86.05, and python 3.8.5
 
 ## Install
 
-  * wget https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_64.sh
-  * bash ./Anaconda3-2020.11-Linux-x86_64.sh
-  * (should be changed)echo 'export PATH="$pathToAnaconda/anaconda3/bin:$PATH"' >> ~/.bashrc
-  * (optional) conda config --set auto_activate_base false
   * pip3 install -r requirements.txt
 
 ## Execution:
