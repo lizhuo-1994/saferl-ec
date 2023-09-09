@@ -13,20 +13,20 @@ pkill -f SafetyHalfCheetahVelocityGymnasium
 
 
 # SafetyHopperVelocityGymnasium-v1 
-python  train_ddpgl_agent.py --task SafetyHopperVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
+python  train_ppol_agent.py --task SafetyHopperVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
 pkill -f SafetyHopperVelocityGymnasium
-python  train_ddpgl_agent.py --task SafetyHopperVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
+python  train_ppol_agent.py --task SafetyHopperVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
 pkill -f SafetyHopperVelocityGymnasium
-python  train_ddpgl_agent.py --task SafetyHopperVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
+python  train_ppol_agent.py --task SafetyHopperVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
 pkill -f SafetyHopperVelocityGymnasium
 
 
 # SafetyWalker2dVelocityGymnasium-v1 
-python  train_ddpgl_agent.py --task SafetyWalker2dVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
+python  train_trpol_agent.py --task SafetyWalker2dVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
 pkill -f SafetyWalker2dVelocityGymnasium
-python  train_ddpgl_agent.py --task SafetyWalker2dVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
+python  train_trpol_agent.py --task SafetyWalker2dVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
 pkill -f SafetyWalker2dVelocityGymnasium
-python  train_ddpgl_agent.py --task SafetyWalker2dVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
+python  train_trpol_agent.py --task SafetyWalker2dVelocityGymnasium-v1 --epoch 200  --episodic True --episodic_step 3 
 pkill -f SafetyWalker2dVelocityGymnasium
 
 
