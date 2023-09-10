@@ -48,9 +48,9 @@ class ScoreInspector:
 
     
         self.min_avg_return = 0
-        self.max_avg_return = 10
+        self.max_avg_return = 1
         self.min_avg_cost   = 0
-        self.max_avg_cost   = 10
+        self.max_avg_cost   = 1
 
         #self.scores = scores
         self.score_avg = 0
@@ -114,6 +114,7 @@ class ScoreInspector:
         
 
         returns = sum(rewards)
+        returns = max(returns, 0)
         costs   = sum(costs)
 
         for i in range(len(abs_states)):
