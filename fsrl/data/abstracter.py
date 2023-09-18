@@ -19,8 +19,7 @@ class ScoreInspector:
         self.state_dim = state_dim
         self.state_min = -1
         self.state_max = 1
-        self.reduction = True if self.state_dim > 24 else False
-     
+        self.reduction = True if self.state_dim > 16 else False
         self.score_avg = None
         self.pcaModel = None
         self.performance_list = []
@@ -45,7 +44,6 @@ class ScoreInspector:
         else:
             self.min_state = np.array([self.state_min for i in range(self.state_dim)])
             self.max_state = np.array([self.state_max for i in range(self.state_dim)])
-
     
         self.min_avg_return = 0
         self.max_avg_return = 1
@@ -96,7 +94,6 @@ class ScoreInspector:
     def start_pattern_abstract(self, con_states, rewards, costs):
 
         con_states = np.array(con_states)
-        con_states = con_states[:,:self.state_dim]
         t = Process(target = self.pattern_abstract, args = (con_states, rewards, costs))
         t.daemon = True
         t.start()
@@ -114,7 +111,7 @@ class ScoreInspector:
         
 
         returns = sum(rewards)
-        returns = max(returns, 0)
+        # returns = max(returns, 0)
         costs   = sum(costs)
 
         for i in range(len(abs_states)):
@@ -194,6 +191,7 @@ class Abstracter:
         if done:
             if self.inspector.reduction:
                 self.con_states = self.dim_reduction(self.con_states)
+
             self.inspector.start_pattern_abstract(self.con_states, self.con_reward, self.con_cost)
             self.clear()
     
@@ -214,8 +212,8 @@ class Abstracter:
             if  times > 0:
                 delta = 0.765 - np.sqrt((return_score - 1) ** 2 + cost_score ** 2)
                 delta = delta * self.epsilon
-                # novelty = 1 / math.e ** min(times - 1, 10)
-                # delta = (return_score - cost_score + novelty) * self.epsilon
+                novelty = 1 / math.e ** min(times - 1, 10)
+                delta = (return_score - cost_score + novelty) * self.epsilon
                 # print(
                 #     pattern, 
                 #     return_score,
